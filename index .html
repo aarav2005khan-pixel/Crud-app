@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRUD Application</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #eee;
+      padding: 8px;
+      margin-top: 6px;
+      border-radius: 4px;
+    }
+    .actions button {
+      width: auto;
+      margin-left: 5px;
+      padding: 5px 8px;
+    }
+    .edit {
+      background: #28a745;
+    }
+    .delete {
+      background: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <h1>CRUD Application</h1>
+  <div class="container">
+    <input type="text" id="itemInput" placeholder="Enter item name" />
+    <button onclick="addItem()">Add Item</button><ul id="itemList"></ul>
+
+  </div>  <script>
+    let items = JSON.parse(localStorage.getItem("items")) || [];
+
+    function renderItems() {
+      const list = document.getElementById("itemList");
+      list.innerHTML = "";
+
+      items.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <span>${item}</span>
+          <div class="actions">
+            <button class="edit" onclick="editItem(${index})">Edit</button>
+            <button class="delete" onclick="deleteItem(${index})">Delete</button>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+
+      localStorage.setItem("items", JSON.stringify(items));
+    }
+
+    function addItem() {
+      const input = document.getElementById("itemInput");
+      if (input.value.trim() === "") return;
+      items.push(input.value);
+      input.value = "";
+      renderItems();
+    }
+
+    function editItem(index) {
+      const newItem = prompt("Update item:", items[index]);
+      if (newItem !== null && newItem.trim() !== "") {
+        items[index] = newItem;
+        renderItems();
+      }
+    }
+
+    function deleteItem(index) {
+      if (confirm("Are you sure you want to delete this item?")) {
+        items.splice(index, 1);
+        renderItems();
+      }
+    }
+
+    renderItems();
+  </script></body>
+</html>
